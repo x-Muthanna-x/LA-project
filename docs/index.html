@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Explore student lifestyle data and estimate academic performance with a trained machine-learning model.">
+  <title>Student Performance Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="Student Performance Explorer home">
+      <span class="brand-mark">S</span>
+      <span>Student Performance Explorer</span>
+    </a>
+    <nav aria-label="Main navigation">
+      <a href="#explore">Explore data</a>
+      <a href="#predict">Try prediction</a>
+      <a href="#method">How it works</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero shell">
+      <div class="hero-copy">
+        <p class="eyebrow">Learning analytics project</p>
+        <h1>How does daily life relate to student performance?</h1>
+        <p class="lead">Explore 2,000 student records and use a trained classification model to estimate whether a lifestyle profile is associated with a GPA of 3.0 or higher.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#predict">Try the model</a>
+          <a class="button secondary" href="#explore">Explore the data</a>
+        </div>
+        <p class="disclaimer">This is an educational demonstration, not academic advice.</p>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="metric-card metric-main">
+          <span>Model</span>
+          <strong>Random Forest</strong>
+          <small>Pass/fail classification</small>
+        </div>
+        <div class="metric-card metric-small metric-data">
+          <strong id="hero-sample-count">2,000</strong>
+          <span>student records</span>
+        </div>
+        <div class="metric-card metric-small metric-features">
+          <strong>5</strong>
+          <span>input features</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats shell" aria-label="Project summary">
+      <article><strong id="sample-count">—</strong><span>records analysed</span></article>
+      <article><strong>5</strong><span>lifestyle features</span></article>
+      <article><strong id="model-accuracy">—</strong><span>test-set accuracy</span></article>
+      <article><strong>3.0</strong><span>GPA pass threshold</span></article>
+    </section>
+
+    <section class="section shell" id="explore">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Explore the dataset</p>
+          <h2>Patterns behind the prediction</h2>
+        </div>
+        <p>Use the charts to compare study habits, sleep and stress with students' GPA.</p>
+      </div>
+      <div class="chart-grid">
+        <article class="panel chart-card wide">
+          <div class="panel-heading">
+            <div><h3>Study hours and GPA</h3><p>Each point represents one student.</p></div>
+            <select id="stress-filter" aria-label="Filter by stress level">
+              <option value="All">All stress levels</option>
+              <option value="Low">Low</option>
+              <option value="Moderate">Moderate</option>
+              <option value="High">High</option>
+            </select>
+          </div>
+          <div id="scatter-chart" class="chart" aria-label="Scatter chart of study hours and GPA"></div>
+        </article>
+        <article class="panel chart-card">
+          <div class="panel-heading"><div><h3>Stress distribution</h3><p>Share of records by reported level.</p></div></div>
+          <div id="stress-chart" class="chart compact" aria-label="Donut chart of stress levels"></div>
+        </article>
+        <article class="panel chart-card">
+          <div class="panel-heading"><div><h3>Average GPA</h3><p>Grouped by stress level.</p></div></div>
+          <div id="gpa-chart" class="chart compact" aria-label="Bar chart of average GPA by stress"></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section prediction-section" id="predict">
+      <div class="shell prediction-layout">
+        <div class="prediction-copy">
+          <p class="eyebrow">Interactive prediction</p>
+          <h2>Build a lifestyle profile</h2>
+          <p>Enter a typical day. The browser runs the trained model locally and shows how the profile is classified.</p>
+          <ul>
+            <li>No information is uploaded or stored.</li>
+            <li>The result is based on patterns in the project dataset.</li>
+            <li>It should not be used to judge a real student.</li>
+          </ul>
+        </div>
+
+        <form class="panel prediction-form" id="prediction-form">
+          <div class="field-grid">
+            <label>Study hours per day<input type="number" name="study" min="0" max="14" step="0.1" value="5" required></label>
+            <label>Sleep hours per day<input type="number" name="sleep" min="0" max="14" step="0.1" value="7.5" required></label>
+            <label>Social hours per day<input type="number" name="social" min="0" max="14" step="0.1" value="2.5" required></label>
+            <label>Physical activity per day<input type="number" name="physical" min="0" max="14" step="0.1" value="1.5" required></label>
+          </div>
+          <label>Stress level
+            <select name="stress" required>
+              <option value="0">Low</option>
+              <option value="1" selected>Moderate</option>
+              <option value="2">High</option>
+            </select>
+          </label>
+          <button class="button primary full" type="submit" id="predict-button">Calculate prediction</button>
+          <div class="prediction-result" id="prediction-result" role="status" aria-live="polite">
+            <span>Result</span>
+            <strong>Enter a profile to begin</strong>
+            <p>The prediction will appear here.</p>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section class="section shell" id="method">
+      <div class="section-heading">
+        <div><p class="eyebrow">Method</p><h2>From raw data to a browser demo</h2></div>
+      </div>
+      <div class="method-grid">
+        <article><span>01</span><h3>Prepare</h3><p>Missing values are filled and stress categories are converted into numbers.</p></article>
+        <article><span>02</span><h3>Train</h3><p>A Random Forest classifier learns from 80% of the dataset.</p></article>
+        <article><span>03</span><h3>Evaluate</h3><p>The remaining 20% is used to measure model accuracy.</p></article>
+        <article><span>04</span><h3>Run locally</h3><p>The trained decision trees are exported so predictions can run directly in the browser.</p></article>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="shell"><span>Student Performance Explorer</span><a href="https://github.com/x-Muthanna-x/LA-project">View source on GitHub</a></div></footer>
+</body>
+</html>

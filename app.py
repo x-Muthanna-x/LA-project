@@ -12,13 +12,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, mean_squared_error
 
 app = Flask(__name__)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Load the dataset
-data_path = os.path.join('data', 'student_lifestyle_dataset.csv')
+data_path = os.path.join(BASE_DIR, 'data', 'student_lifestyle_dataset.csv')
 df = pd.read_csv(data_path)
 
 # Load the trained model
-model_path = os.path.join('models', 'model.pkl')
+model_path = os.path.join(BASE_DIR, 'models', 'model.pkl')
 with open(model_path, 'rb') as f:
     model = pickle.load(f)
 
